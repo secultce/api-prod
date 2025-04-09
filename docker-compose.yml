@@ -14,7 +14,7 @@ services:
     command: ["supervisord", "-c", "/etc/supervisord.conf"]
     networks:
       - api-network
-      - lab
+      - mapaservices
 
   nginx:
     image: nginx:alpine
@@ -59,7 +59,7 @@ services:
 networks:
   api-network:
     driver: bridge
-  lab:
+  mapaservices:
     external: true
     
 volumes:
