@@ -12,9 +12,11 @@ services:
     env_file:
       - .env
     command: ["supervisord", "-c", "/etc/supervisord.conf"]
+    volumes:
+      - ./docker/logs/worker.log:/var/www/html/storage/logs/worker.log
     networks:
       - api-network
-      - mapaservices
+      - lab
 
   nginx:
     image: nginx:alpine
@@ -45,7 +47,13 @@ services:
       - dbdata:/var/lib/postgresql/data
     networks:
       - api-network
-      
+  mailpit:
+    image: 'axllent/mailpit:latest'
+    ports:
+      - '${FORWARD_MAILPIT_PORT:-1025}:1025'
+      - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
+    networks:
+      - api-network
 
   redis:
     image: redis:alpine
@@ -59,7 +67,7 @@ services:
 networks:
   api-network:
     driver: bridge
-  mapaservices:
+  lab:
     external: true
     
 volumes:
